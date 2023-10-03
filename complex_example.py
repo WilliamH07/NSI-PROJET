@@ -107,15 +107,15 @@ class App(customtkinter.CTk):
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
         
         # Ajout d'une étiquette de logo
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Class Generator", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="NSI - CLASS", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
         
         # Création de boutons dans la barre latérale
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="GENERATE", command=self.create_group)
+        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="GENERATE", command=self.create_group, state="disabled")
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
         self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, text="RESET", command=self.create_group)
         self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
-        self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, text="PRINT", command=self.create_group)
+        self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, text="PRINT", command=self.create_group, state="disabled")
         self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
 
 
@@ -214,8 +214,9 @@ class App(customtkinter.CTk):
 
         self.total_eleves_label = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total d'élèves : " + str(final))
         self.total_eleves_label.grid(row=3, column=0, padx=20, pady=(0, 10))
-
-        if final > 0:
+        
+  
+        if final > 2 :
             
             if final % 3 == 0:
                 ttgrp = final // 3
@@ -354,9 +355,9 @@ class App(customtkinter.CTk):
 
                         for student in students:
                             nom_eleve = list(eleves.keys())[list(eleves.values()).index(student)]
-                            frame02 = customtkinter.CTkFrame(master=self.scrollable_frame02)  # Utilisez self.scrollable_frame02 ici
+                            frame02 = customtkinter.CTkFrame(master=self.scrollable_frame02) 
                             frame02.grid(row=groupe2, column=0, padx=10, pady=(0, 20))
-                            self.scrollable_frame02_switches.append(frame02)  # Utilisez self.scrollable_frame02_switches ici
+                            self.scrollable_frame02_switches.append(frame02) 
 
                             button02 = customtkinter.CTkButton(master=frame02, text=f" N°{groupe2}  {prenom_eleve}",
                                                             command=lambda group02=groupe2: self.open_group_window02(group02))
@@ -405,9 +406,14 @@ class App(customtkinter.CTk):
         print(resultats)
 
     def create_group(self):
-                print("debug)")   
-
-
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
+            print("reset01")
+                 
+        for widget in self.scrollable_frame02.winfo_children():
+            widget.destroy()
+            print("reset02")
+        self.update_idletasks()
 
 
     # Gestionnaire d'événement pour le changement du mode d'apparence
