@@ -113,7 +113,7 @@ class App(customtkinter.CTk):
         # Création de boutons dans la barre latérale
         self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="GENERATE", command=self.create_group, state="disabled")
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, text="RESET", command=self.create_group)
+        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, text="RESET", command=self.create_group, state="disabled")
         self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
         self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, text="PRINT", command=self.create_group, state="disabled")
         self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
@@ -185,94 +185,7 @@ class App(customtkinter.CTk):
                         students_assigned.add(eleve_selec)
                         resultats[groupe].append(eleve_selec)
                         break     
-
-    def open_input_dialog_event(self):
-        global numero
-        global eleves
-        global final
-        global students_assigned
-        global resultats
-        global resultats01
-
-        numero = 1
-        eleves = {}
-        students_assigned = set()
-        resultats = {}
-        resultats01 = {}
-
-        dialog = customtkinter.CTkInputDialog(text="Entrer la liste des élèves dans ce format : E1, E2, ... ", title="Liste Eleves")
-
-        eleves_list = dialog.get_input()
-        eleves_list = eleves_list.replace(',', ' ')
-        list_sep = eleves_list.split()
-
-        for mot in list_sep:
-            eleves[mot] = numero
-            numero += 1
-
-        final = numero - 1
-
-        self.total_eleves_label = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total d'élèves : " + str(final))
-        self.total_eleves_label.grid(row=3, column=0, padx=20, pady=(0, 10))
-        
-  
-        if final > 2 :
-            
-            if final % 3 == 0:
-                ttgrp = final // 3
-                
-                self.total_eleves_label2 = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 3 : " + str(ttgrp))
-                self.total_eleves_label3 = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 2 : 0" )
-                self.total_eleves_label2.grid(row=4, column=0, padx=20, pady=(0, 10))
-                
-                self.eleves_assign3()
-
-
-            else:
-
-                dividende = final
-                quotient = dividende // diviseur
-                reste = dividende % diviseur
-
-                groupe03 = quotient
-                groupe02 = reste // 2
-                
-                if reste == 2:
-                    self.total_eleves_label2 = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 3 : " + str(groupe03))
-                    self.total_eleves_label3 = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 2 : " + str(groupe02))
-                    self.total_eleves_label2.grid(row=4, column=0, padx=20, pady=(0, 10))
-                    self.total_eleves_label3.grid(row=5, column=0, padx=20, pady=(0, 10))
-
-                    for groupe in range(1, int(groupe03) + 1):
-                        # Vérifiez si la clé existe dans le dictionnaire
-                        if groupe not in resultats:
-                            resultats[groupe] = []
-
-                        for _ in range(3):
-                            while True:
-                                eleve_selec = random.randint(1, final)
-
-                                if eleve_selec not in students_assigned:
-                                    students_assigned.add(eleve_selec)
-                                    resultats[groupe].append(eleve_selec)
-                                    break
-
-                    for groupe2_index in range(1, int(groupe02) + 1):
-                        # Vérifiez si la clé existe dans le dictionnaire
-                        if groupe2_index not in resultats01:
-                            resultats01[groupe2_index] = []
-                    
-                        for _ in range(2):
-                            #print("debug03") 
-
-                            while True:
-                                eleve_selec = random.randint(1, final)
-                    
-                                if eleve_selec not in students_assigned:
-                                    students_assigned.add(eleve_selec)
-                                    resultats01[groupe2_index].append(eleve_selec)
-                                    break
-
+    def affichage_result(self):
                     # Création d'un cadre déroulant
                     self.scrollable_frame = customtkinter.CTkScrollableFrame(self, label_text="Groupes 03")
                     self.scrollable_frame.grid(row=0, column=1, padx=(20, 320), pady=(25, 0), sticky="nsew")
@@ -320,6 +233,95 @@ class App(customtkinter.CTk):
                                                             command=lambda group02=groupe2: self.open_group_window02(group02))
                             button02.pack()
                             print(nom_eleve)
+    def open_input_dialog_event(self):
+        global numero
+        global eleves
+        global final
+        global students_assigned
+        global resultats
+        global resultats01
+
+        numero = 1
+        eleves = {}
+        students_assigned = set()
+        resultats = {}
+        resultats01 = {}
+
+        dialog = customtkinter.CTkInputDialog(text="Entrer la liste des élèves dans ce format : E1, E2, ... ", title="Liste Eleves")
+
+        eleves_list = dialog.get_input()
+        eleves_list = eleves_list.replace(',', ' ')
+        list_sep = eleves_list.split()
+
+        for mot in list_sep:
+            eleves[mot] = numero
+            numero += 1
+
+        final = numero - 1
+
+        self.total_eleves_label = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total d'élèves : " + str(final))
+        self.total_eleves_label.grid(row=3, column=0, padx=20, pady=(0, 10))
+        
+  
+        if final > 2 :
+            
+            if final % 3 == 0:
+                ttgrp = final // 3
+                
+                self.total_eleves_label2 = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 3 : " + str(ttgrp))
+                self.total_eleves_label3 = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 2 : 0" )
+                self.total_eleves_label2.grid(row=4, column=0, padx=20, pady=(0, 10))
+                
+                self.eleves_assign3()
+                self.affichage_result()
+
+            else:
+
+                dividende = final
+                quotient = dividende // diviseur
+                reste = dividende % diviseur
+
+                groupe03 = quotient
+                groupe02 = reste // 2
+                
+                if (reste % 2) == 0:
+                    self.total_eleves_label2 = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 3 : " + str(groupe03))
+                    self.total_eleves_label3 = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 2 : " + str(groupe02))
+                    self.total_eleves_label2.grid(row=4, column=0, padx=20, pady=(0, 10))
+                    self.total_eleves_label3.grid(row=5, column=0, padx=20, pady=(0, 10))
+
+                    for groupe in range(1, int(groupe03) + 1):
+                        # Vérifiez si la clé existe dans le dictionnaire
+                        if groupe not in resultats:
+                            resultats[groupe] = []
+
+                        for _ in range(3):
+                            while True:
+                                eleve_selec = random.randint(1, final)
+
+                                if eleve_selec not in students_assigned:
+                                    students_assigned.add(eleve_selec)
+                                    resultats[groupe].append(eleve_selec)
+                                    break
+
+                    for groupe2_index in range(1, int(groupe02) + 1):
+                        # Vérifiez si la clé existe dans le dictionnaire
+                        if groupe2_index not in resultats01:
+                            resultats01[groupe2_index] = []
+                    
+                        for _ in range(2):
+                            #print("debug03") 
+
+                            while True:
+                                eleve_selec = random.randint(1, final)
+                    
+                                if eleve_selec not in students_assigned:
+                                    students_assigned.add(eleve_selec)
+                                    resultats01[groupe2_index].append(eleve_selec)
+                                    break
+
+                    self.affichage_result()
+            
                 else: 
                     grpelev = quotient - 1
                     groupe02 = reste * 2
@@ -374,42 +376,7 @@ class App(customtkinter.CTk):
                     
                     #DEBUG
 
-                    for groupe, students in resultats.items():
-                        print(Fore.RED + "Résultats pour le groupe de 3 numéro : ", groupe, Fore.RESET)
-
-                        if students:
-                            nom_eleve = list(eleves.keys())[list(eleves.values()).index(students[0])]
-                            prenom_eleve = nom_eleve.split()[0]
-
-                        for student in students:
-                            nom_eleve = list(eleves.keys())[list(eleves.values()).index(student)]
-                            frame = customtkinter.CTkFrame(master=self.scrollable_frame)
-                            frame.grid(row=groupe, column=0, padx=10, pady=(0, 20))
-                            self.scrollable_frame_switches.append(frame)
-
-                            button = customtkinter.CTkButton(master=frame, text=f" N°{groupe}  {prenom_eleve}",
-                                                            command=lambda group=groupe: self.open_group_window(group))
-                            button.pack()
-                            print(nom_eleve)
-                            
-
-                    for groupe2, students in resultats01.items():
-                        print(Fore.RED + "Résultats pour le groupe de 2", groupe2, Fore.RESET)
-                        if students:
-                            nom_eleve = list(eleves.keys())[list(eleves.values()).index(students[0])]
-                            prenom_eleve = nom_eleve.split()[0]
-
-                        for student in students:
-                            nom_eleve = list(eleves.keys())[list(eleves.values()).index(student)]
-                            frame02 = customtkinter.CTkFrame(master=self.scrollable_frame02) 
-                            frame02.grid(row=groupe2, column=0, padx=10, pady=(0, 20))
-                            self.scrollable_frame02_switches.append(frame02) 
-
-                            button02 = customtkinter.CTkButton(master=frame02, text=f" N°{groupe2}  {prenom_eleve}",
-                                                            command=lambda group02=groupe2: self.open_group_window02(group02))
-                            button02.pack()
-                            print(nom_eleve)
-                        
+                    self.affichage_result()
             
 
 
