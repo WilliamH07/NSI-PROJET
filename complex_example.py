@@ -236,8 +236,8 @@ class App(customtkinter.CTk):
 
                 groupe03 = quotient
                 groupe02 = reste // 2
-
-                if (reste % 2) == 0:
+                
+                if reste == 2:
                     self.total_eleves_label2 = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 3 : " + str(groupe03))
                     self.total_eleves_label3 = customtkinter.CTkLabel(self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 2 : " + str(groupe02))
                     self.total_eleves_label2.grid(row=4, column=0, padx=20, pady=(0, 10))
@@ -273,7 +273,53 @@ class App(customtkinter.CTk):
                                     resultats01[groupe2_index].append(eleve_selec)
                                     break
 
+                    # Création d'un cadre déroulant
+                    self.scrollable_frame = customtkinter.CTkScrollableFrame(self, label_text="Groupes 03")
+                    self.scrollable_frame.grid(row=0, column=1, padx=(20, 320), pady=(25, 0), sticky="nsew")
+                    self.scrollable_frame.grid_columnconfigure(0, weight=1)
+                    self.scrollable_frame_switches = []  # Réinitialiser la liste
 
+                    # Création d'un cadre déroulant 02
+                    self.scrollable_frame02 = customtkinter.CTkScrollableFrame(self, label_text="Groupes 02")
+                    self.scrollable_frame02.grid(row=0, column=1, padx=(320, 20), pady=(25, 0), sticky="nsew")
+                    self.scrollable_frame02.grid_columnconfigure(0, weight=1)
+                    self.scrollable_frame02_switches = []  # Réinitialiser la liste
+                    
+                    for groupe, students in resultats.items():
+                        print(Fore.RED + "Résultats pour le groupe de 3 numéro : ", groupe, Fore.RESET)
+
+                        if students:
+                            nom_eleve = list(eleves.keys())[list(eleves.values()).index(students[0])]
+                            prenom_eleve = nom_eleve.split()[0]
+
+                        for student in students:
+                            nom_eleve = list(eleves.keys())[list(eleves.values()).index(student)]
+                            frame = customtkinter.CTkFrame(master=self.scrollable_frame)
+                            frame.grid(row=groupe, column=0, padx=10, pady=(0, 20))
+                            self.scrollable_frame_switches.append(frame)
+
+                            button = customtkinter.CTkButton(master=frame, text=f" N°{groupe}  {prenom_eleve}",
+                                                            command=lambda group=groupe: self.open_group_window(group))
+                            button.pack()
+                            print(nom_eleve)
+                            
+
+                    for groupe2, students in resultats01.items():
+                        print(Fore.RED + "Résultats pour le groupe de 2", groupe2, Fore.RESET)
+                        if students:
+                            nom_eleve = list(eleves.keys())[list(eleves.values()).index(students[0])]
+                            prenom_eleve = nom_eleve.split()[0]
+
+                        for student in students:
+                            nom_eleve = list(eleves.keys())[list(eleves.values()).index(student)]
+                            frame02 = customtkinter.CTkFrame(master=self.scrollable_frame02) 
+                            frame02.grid(row=groupe2, column=0, padx=10, pady=(0, 20))
+                            self.scrollable_frame02_switches.append(frame02) 
+
+                            button02 = customtkinter.CTkButton(master=frame02, text=f" N°{groupe2}  {prenom_eleve}",
+                                                            command=lambda group02=groupe2: self.open_group_window02(group02))
+                            button02.pack()
+                            print(nom_eleve)
                 else: 
                     grpelev = quotient - 1
                     groupe02 = reste * 2
