@@ -86,14 +86,30 @@ class ToplevelWindow02(customtkinter.CTkToplevel):
 class ToplevelWindowPaires(customtkinter.CTkToplevel):
     def __init__(self, app):
         super().__init__(app)
-        self.geometry("400x120")
+        self.geometry("400x480")
         # Configuration de la grille (4x4)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure((2, 3), weight=0)
         self.grid_rowconfigure((0, 1, 2), weight=1)
         self.title("Create Pair")  # Titre de la fenêtre
+        
+        self.scrollable_frame = customtkinter.CTkScrollableFrame(self, label_text="Listes des élèves")
+        self.scrollable_frame.grid(row=0, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
+        self.scrollable_frame.grid_columnconfigure(0, weight=1)
+        self.scrollable_frame_switches = []  # Réinitialiser la liste
+        global list_sep
+        for i, student in enumerate(list_sep, start=1):
+            frame = customtkinter.CTkFrame(master=self.scrollable_frame)
+            frame.grid(row=i, column=0, padx=10, pady=(0, 20))
+            self.scrollable_frame_switches.append(frame)
+           
+            # Ajouter un label à l'intérieur du cadre pour afficher le texte
+            label = customtkinter.CTkButton(master=frame,text=f" N°{eleves[student]}  {student}")
+            label.pack()
 
-
+        #JE DOIS FAIRE EN SORTE QUE QUAND ON CLIQUE SUR LE BOUTON UNE NOUVELLE FENETRE EST OUVERTE
+        #QUI PERMET A L'UTILISATEUR DE CREER UN PAIRE AVEC L'ELEVE CLIQUER 
+        #Y'AURA DES CHECKBOX POUR FAIRE LE CHOIX ET CA DOIT ETRE STOCKER DANS UN DICTO 
 
 
 # Définition de la classe principale de l'application
@@ -257,7 +273,7 @@ class App(customtkinter.CTk):
         global students_assigned
         global resultats
         global resultats01
-
+        global list_sep
         numero = 1
         eleves = {}
         students_assigned = set()
