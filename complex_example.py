@@ -6,6 +6,7 @@ import customtkinter
 
 import random
 from colorama import Fore, Style
+
 diviseur = 3
 dividende = 0
 final = 0
@@ -20,7 +21,7 @@ students_assigned = set()
 resultats01 = {}
 
 # Configuration de l'apparence et du thème par défaut
-customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
@@ -81,6 +82,17 @@ class ToplevelWindow02(customtkinter.CTkToplevel):
                 label_texte_supplementaire.pack(padx=40, pady=5)
         else:
             print("Le groupe", group02, "n'existe pas dans le dictionnaire.")
+            
+class ToplevelWindowPaires(customtkinter.CTkToplevel):
+    def __init__(self, app):
+        super().__init__(app)
+        self.geometry("400x120")
+        # Configuration de la grille (4x4)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure((2, 3), weight=0)
+        self.grid_rowconfigure((0, 1, 2), weight=1)
+        self.title("Create Pair")  # Titre de la fenêtre
+
 
 
 
@@ -111,12 +123,8 @@ class App(customtkinter.CTk):
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
         
         # Création de boutons dans la barre latérale
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="GENERATE", command=self.create_group, state="disabled")
-        self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, text="RESET", command=self.create_group, state="disabled")
-        self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
         self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, text="PRINT", command=self.create_group, state="disabled")
-        self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
+        self.sidebar_button_3.grid(row=1, column=0, padx=20, pady=10)
 
 
 
@@ -136,17 +144,19 @@ class App(customtkinter.CTk):
         self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["80%", "90%", "100%", "110%", "120%"],
                                                                command=self.change_scaling_event)
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
+    
 
 
         # Création d'un onglet "Eleves"
         self.tabview = customtkinter.CTkTabview(self, width=250)
         self.tabview.grid(row=0, column=3, padx=(20, 20), pady=(20, 0), sticky="nsew")
         self.tabview.add("Eleves")  # Placer l'onglet "Eleves" ici
-        self.tabview.add("Tab 2")
+        self.tabview.add("Paires")
         self.tabview.add("Tab 3")
 
         self.tabview.tab("Eleves").grid_columnconfigure(0, weight=1)  # Configuration de la grille des onglets individuels
-        self.tabview.tab("Tab 2").grid_columnconfigure(0, weight=1)
+        self.tabview.tab("Paires").grid_columnconfigure(0, weight=1)
+
 
         # Ajout de plusieurs widgets à l'interface utilisateur
 
@@ -160,13 +170,20 @@ class App(customtkinter.CTk):
 
 
         # Créez une étiquette pour afficher le nombre total d'élèves sous le bouton
-        self.label_tab_2 = customtkinter.CTkLabel(self.tabview.tab("Tab 2"), text="CTkLabel on Tab 2")
-        self.label_tab_2.grid(row=0, column=0, padx=20, pady=20)
+        self.label_tab_2 = customtkinter.CTkLabel(self.tabview.tab("Paires"), text="Créer des paires d'élèves")
+        self.label_tab_2.grid(row=3, column=0, padx=20, pady=(10, 10))
+        
+        self.label_tab_3 = customtkinter.CTkButton(self.tabview.tab("Paires"), text="Create",
+                                                           command=self.open_group_window_paires)
+        self.label_tab_3.grid(row=2, column=0, padx=20, pady=(10, 10))
+
+
 
         self.appearance_mode_optionemenu.set("Dark")
         self.scaling_optionemenu.set("100%")
         self.toplevel_window = None
         self.toplevel_window02 = None 
+        self.toplevel_window_paires = None 
     def eleves_assign3(self):
         global final  # Ajoutez ceci pour accéder à la variable globale final
         global students_assigned  # Ajoutez ceci pour accéder à la variable globale students_assigned
@@ -417,7 +434,18 @@ class App(customtkinter.CTk):
 
         self.toplevel_window02 = ToplevelWindow02(self, group_number02)
         print(resultats)
+        
+    def open_group_window_paires(self):
 
+        print("Ouvrir la fenêtre de paires")
+
+        # Fermez la fenêtre Toplevel existante s'il y en a une
+        if self.toplevel_window_paires and self.toplevel_window_paires.winfo_exists():
+            self.toplevel_window_paires.destroy()
+
+        self.toplevel_window_paires = ToplevelWindowPaires(self)
+        
+        
     def create_group(self):
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
@@ -427,7 +455,6 @@ class App(customtkinter.CTk):
             widget.destroy()
             print("reset02")
         self.update_idletasks()
-
 
     # Gestionnaire d'événement pour le changement du mode d'apparence
     def change_appearance_mode_event(self, new_appearance_mode: str):
