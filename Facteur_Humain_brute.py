@@ -11,7 +11,7 @@ Preferences = {
     'Donna':   ['Harvey', 'Louis', 'Mike', 'Logan'],
     'Katrina': ['Mike', 'Harvey', 'Louis', 'Logan'],
     'Sheila':  ['Louis', 'Logan', 'Harvey', 'Mike']
-}
+} #JE DOIS FAIRE EN SORTE QU'UNE FOIS QUE LES DEMANDES DE PAIRE SONT FAITES DANS L'INTERFACE JE STOCK LES RESULTATS DANS UN DICTO POUR ENSUITE QUE CA SOIT FORMATTER
 
 def main():
     People_Free = list(People)
