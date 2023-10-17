@@ -1,8 +1,15 @@
 #BACKUp
 # Importation des modules n√©cessaires
-import tkinter
+
 import tkinter.messagebox
 import customtkinter
+
+
+import tkinter as tk
+from tkinter import ttk
+from tkinter import filedialog as fd
+from tkinter.messagebox import showinfo
+
 
 import random
 from colorama import Fore, Style
@@ -25,6 +32,8 @@ customtkinter.set_appearance_mode(
     "Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme(
     "blue")  # Themes: "blue" (standard), "green", "dark-blue"
+
+
 
 
 class ToplevelWindow(customtkinter.CTkToplevel):
@@ -152,10 +161,6 @@ class ToplevelWindowPaires_create(customtkinter.CTkToplevel):
             print(f"Eleve deselectionne : {selected_student}")
 
 
-
-
-
-
 class ToplevelWindowPaires(customtkinter.CTkToplevel):
   def open_group_window_create_pair(self, student):
     use_elev = student
@@ -281,13 +286,24 @@ class App(customtkinter.CTk):
 
     self.total_eleves_label = customtkinter.CTkLabel(
         self.tabview.tab("Eleves"), text="Aucuns eleves")
-    self.total_eleves_label.grid(row=3, column=0, padx=20, pady=(0, 10))
+    self.total_eleves_label.grid(row=4, column=0, padx=20, pady=(0, 10))
 
     self.string_input_button = customtkinter.CTkButton(
         self.tabview.tab("Eleves"),
-        text="Ajouter des eleves",
+        text="Ajouter des eleves manuellement",
         command=self.open_input_dialog_event)
-    self.string_input_button.grid(row=2, column=0, padx=20, pady=(10, 10))
+    self.string_input_button.grid(row=2, column=0, padx=20, pady=(5, 5))
+
+    self.string_input_button02 = customtkinter.CTkButton(
+        self.tabview.tab("Eleves"),
+        text="Ajouter des eleves fichier .txt",
+        command=self.select_file)
+    self.string_input_button02.grid(row=3, column=0, padx=5, pady=(5, 5))
+    
+
+
+
+
 
     # Cr√©ez une √©tiquette pour afficher le nombre total d'√©l√®ves sous le bouton
     self.label_tab_2 = customtkinter.CTkLabel(self.tabview.tab("Paires"),
@@ -327,6 +343,7 @@ class App(customtkinter.CTk):
             break
 
   def affichage_result(self):
+      
     # Cr√©ation d'un cadre d√©roulant
     self.scrollable_frame = customtkinter.CTkScrollableFrame(
         self, label_text="Groupes 03")
@@ -390,8 +407,38 @@ class App(customtkinter.CTk):
             command=lambda group02=groupe2: self.open_group_window02(group02))
         button02.pack()
         print(nom_eleve)
-
+  
+  def open_file():
+   filepath = filedialog.askopenfilename(title="Ouvrir un fichier texte", filetypes=(("fichiers texte","*.txt"), ("tous les fichiers","*.*")))
+   file = open(filepath,'r')
+   print(file.read())
+   file.close()
+  
+  def select_file(self):
+        filetypes = (
+            ('text files', '*.txt'),
+            ('All files', '*.*')
+        )
+    
+        filename = fd.askopenfilename(
+            title='Open a file',
+            initialdir='/',
+            filetypes=filetypes)
+    
+        showinfo(
+            title='Selected File',
+            message=filename
+        )
+        
+        file = open(filename,'r')
+        print(file.read())
+        file.close()  
+        
+        
+        
+        
   def open_input_dialog_event(self):
+      
     global numero
     global eleves
     global final
@@ -408,7 +455,7 @@ class App(customtkinter.CTk):
     dialog = customtkinter.CTkInputDialog(
         text="Entrer la liste des eleves dans ce format : E1, E2, ... ",
         title="Liste Eleves")
-
+    
     eleves_list = dialog.get_input()
     eleves_list = eleves_list.replace(',', ' ')
     list_sep = eleves_list.split()
@@ -422,7 +469,10 @@ class App(customtkinter.CTk):
     self.total_eleves_label = customtkinter.CTkLabel(
         self.tabview.tab("Eleves"),
         text="Nombre total d'eleves : " + str(final))
-    self.total_eleves_label.grid(row=3, column=0, padx=20, pady=(0, 10))
+    self.total_eleves_label.grid(row=4, column=0, padx=20, pady=(0, 10))
+
+
+
 
     if final > 2:
 
@@ -434,10 +484,15 @@ class App(customtkinter.CTk):
             text="Nombre total groupe(s) de 3 : " + str(ttgrp))
         self.total_eleves_label3 = customtkinter.CTkLabel(
             self.tabview.tab("Eleves"), text="Nombre total groupe(s) de 2 : 0")
-        self.total_eleves_label2.grid(row=4, column=0, padx=20, pady=(0, 10))
+        self.total_eleves_label2.grid(row=5, column=0, padx=20, pady=(0, 10))
 
         self.eleves_assign3()
         self.affichage_result()
+        
+        
+        
+        
+        
 
       else:
 
@@ -455,8 +510,8 @@ class App(customtkinter.CTk):
           self.total_eleves_label3 = customtkinter.CTkLabel(
               self.tabview.tab("Eleves"),
               text="Nombre total groupe(s) de 2 : " + str(groupe02))
-          self.total_eleves_label2.grid(row=4, column=0, padx=20, pady=(0, 10))
-          self.total_eleves_label3.grid(row=5, column=0, padx=20, pady=(0, 10))
+          self.total_eleves_label2.grid(row=5, column=0, padx=20, pady=(0, 10))
+          self.total_eleves_label3.grid(row=6, column=0, padx=20, pady=(0, 10))
 
           for groupe in range(1, int(groupe03) + 1):
             # V√©rifiez si la cl√© existe dans le dictionnaire
@@ -500,8 +555,8 @@ class App(customtkinter.CTk):
           self.total_eleves_label3 = customtkinter.CTkLabel(
               self.tabview.tab("Eleves"),
               text="Nombre total groupe(s) de 2 : " + str(groupe02))
-          self.total_eleves_label2.grid(row=4, column=0, padx=20, pady=(0, 10))
-          self.total_eleves_label3.grid(row=5, column=0, padx=20, pady=(0, 10))
+          self.total_eleves_label2.grid(row=5, column=0, padx=20, pady=(0, 10))
+          self.total_eleves_label3.grid(row=6, column=0, padx=20, pady=(0, 10))
 
           # Cr√©ation d'un cadre d√©roulant
           self.scrollable_frame = customtkinter.CTkScrollableFrame(
